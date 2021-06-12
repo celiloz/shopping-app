@@ -3,19 +3,18 @@ extends ../layouts/main-layout.pug
 include ../mixins/createProduct.pug
 
 block content
-        include ../includes/slider.pug
-        
-            a(href="#mySlider"  data-slide="prev").carousel-control-prev
-                span.carousel-control-prev-icon
+
+    .row
+        .col-md-3
+            include ../includes/menu.pug
+
+        .col-md-9
+
+            include ../includes/slider.pug
             
-            a(href="#mySlider"  data-slide="next").carousel-control-next
-            span.carousel-control-next-icon
-
-    
-
-        .row
-            if products.length > 0
-                each product in products
-                    +createProduct(product)
-            else
-                h1 No Products    
+            .row
+                if products.length > 0
+                    each product in products
+                        +createProduct(product)
+                else
+                    h1 No Products
