@@ -7,14 +7,18 @@ router.get('/', shopController.getIndex);
 
 router.get('/products', shopController.getProducts);
 
-router.get('/product/:productid', shopController.getProduct);
+router.get('/products/:productid', shopController.getProduct);
 
 router.get('/categories/:categoryid', shopController.getProductsByCategoryId);
 
-router.get('/details', shopController.getProductDetails);
+//router.get('/cart', shopController.getCart);
 
-router.get('/cart', shopController.getCart);
+//router.post('/cart', shopController.postCart);
 
-router.get('/orders', shopController.getOrders);
+//router.post('/delete-cartitem', shopController.postCartItemDelete);
+
+//router.get('/orders', shopController.getOrders);
+
+//router.post('/create-order', shopController.postOrder);
 
 module.exports = router;
