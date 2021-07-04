@@ -1,4 +1,4 @@
-## Project setup, development and build
+## Project setup, start
 
 ```
 #install package
