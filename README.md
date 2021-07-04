@@ -1,7 +1,7 @@
 ## Project setup, start
 
 ```
-#install package
+# install package
 npm install
 ```
 
