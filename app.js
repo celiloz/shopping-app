@@ -12,22 +12,22 @@ const userRoutes = require('./routes/shop');
 
 const errorController = require('./controllers/errors');
 const mongoConnect = require('./utility/database').mongoConnect;
+
 const User = require('./models/user');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req,res,next)=>{
+
+app.use((req, res, next) => {
     User.findByUserName('celiloz')
-        .then(user=>{
-            req.user = new User(user.name, user.email, user._id);
+        .then(user => {
+            req.user = new User(user.name, user.email, user.cart, user._id);
+            console.log(req.user);
             next();
         })
-        .catch(err=>{
-            console.log(err)
-        })
+        .catch(err => { console.log(err) });
 })
-
 
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
@@ -38,9 +38,9 @@ mongoConnect(() => {
 
     User.findByUserName('celiloz')
         .then(user => {
-            if(!user) {
+            if (!user) {
                 user = new User('celiloz', 'email@celiloz.com');
-                return user.save(); 
+                return user.save();
             }
             return user;
         })
@@ -48,7 +48,6 @@ mongoConnect(() => {
             console.log(user);
             app.listen(3000);
         })
-        .catch(err => {
-            console.log(err);
-        }) 
+        .catch(err => { console.log(err) });
 });
+
