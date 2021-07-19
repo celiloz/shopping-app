@@ -10,8 +10,10 @@ app.set('views', './views');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/shop');
 
+const mongoose = require('mongoose');
+
 const errorController = require('./controllers/errors');
-const mongoConnect = require('./utility/database').mongoConnect;
+
 
 const User = require('./models/user');
 
@@ -29,11 +31,12 @@ app.use((req, res, next) => {
         .catch(err => { console.log(err) });
 })
 
+
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
 
 app.use(errorController.get404Page);
-
+/*
 mongoConnect(() => {
 
     User.findByUserName('celiloz')
@@ -50,4 +53,10 @@ mongoConnect(() => {
         })
         .catch(err => { console.log(err) });
 });
-
+*/
+mongoose.connect('mongodb+srv://celiloz:Celil147369@cluster0.wtfup.mongodb.net/node-app?retryWrites=true&w=majority')
+    .then(()=> {
+        console.log('connected to mongodb');
+        app.listen(3000);
+    })
+    .catch(err=>console.log(err));

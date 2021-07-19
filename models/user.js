@@ -110,7 +110,76 @@ class User {
             })
     }
 
+    deleteCartItem(productid) {
+        const cartItems = this.cart.items.filter(item =>{
+            return item.productId.toString() !== productid.toString()
+        });
 
+        const db = getDb();
+
+        return db
+            .collection('users')
+            .updateOne(
+                {_id: new mongodb.ObjectID(this._id)},
+                {$set: {
+                    cart:{items:cartItems}
+                }}
+            )
+    }
+
+
+    addOrder() {
+        // get cart
+
+        // create order object
+
+        // save order
+
+        // update cart
+
+        const db = getDb();
+        return this.getCart()
+            .then(products=>{
+                const order = {
+                    items: products.map(item=> {
+                        return {
+                            _id: item._id,
+                            name: item.name,
+                            price: item.price,
+                            imageUrl: item.imageUrl,
+                            userId: item.userId,
+                            quantity: item.quantity
+                        }
+                    }),
+                    user: {
+                        _id: mongodb.ObjectID(this._id),
+                        name: this.name,
+                        email: this.email
+                    },
+                    date: new Date().toLocaleString()
+                }
+
+                return db.collection('orders').insertOne(order);
+            })
+
+            .then(()=>{
+                this.cart = {items: []};
+                return db.collection('users')
+                    .updateOne({_id: new mongodb.ObjectID(this._id)},
+                    {$set:{
+                        cart:{
+                            items: []
+                        }
+                    }})
+            })
+    }
+
+    getOrders() {
+        const db = getDb();
+        return db.collection('orders')
+            .find({'user._id': new mongodb.ObjectID(this._id)})
+            .toArray();
+    }
 
 
 }
