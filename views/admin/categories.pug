@@ -3,13 +3,13 @@ extends ../layouts/main-layout.pug
 block content 
 
     if (action !== 'undefined' && action === 'create')
-        div.alert.alert-success The product has been crated.
+        div.alert.alert-success The category has been crated.
 
     if (action !== 'undefined' && action === 'delete')
-        div.alert.alert-danger The product has been deleted.
+        div.alert.alert-danger The category has been deleted.
 
     if (action !== 'undefined' && action === 'edit')
-        div.alert.alert-success The product has been updated.
+        div.alert.alert-success The category has been updated.
     
     if categories.length > 0
         table.table.table-bordered
@@ -30,4 +30,4 @@ block content
                                 input(type='hidden' name='categoryid' value=`${category._id}`)
                                 button(type='submit').btn.btn-danger.btn-sm Delete
     else
-        h1 No Products                        
+        h1 No Category                        

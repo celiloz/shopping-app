@@ -14,7 +14,6 @@ const mongoose = require('mongoose');
 
 const errorController = require('./controllers/errors');
 
-
 const User = require('./models/user');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,41 +21,44 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use((req, res, next) => {
-    User.findByUserName('celiloz')
+    User.findOne({ name: 'celiloz' })
         .then(user => {
-            req.user = new User(user.name, user.email, user.cart, user._id);
-            console.log(req.user);
+            req.user = user;
             next();
         })
         .catch(err => { console.log(err) });
 })
 
-
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
 
 app.use(errorController.get404Page);
-/*
-mongoConnect(() => {
 
-    User.findByUserName('celiloz')
-        .then(user => {
-            if (!user) {
-                user = new User('celiloz', 'email@celiloz.com');
-                return user.save();
-            }
-            return user;
-        })
-        .then(user => {
-            console.log(user);
-            app.listen(3000);
-        })
-        .catch(err => { console.log(err) });
-});
-*/
-mongoose.connect('mongodb+srv://celiloz:Celil147369@cluster0.wtfup.mongodb.net/node-app?retryWrites=true&w=majority')
-    .then(()=> {
+mongoose.connect('mongodb+srv://celiloz:Celil147369@cluster0.wtfup.mongodb.net/node-app?retryWrites=true&w=majority',{ useUnifiedTopology: true })
+        .then(() => {
         console.log('connected to mongodb');
-        app.listen(3000);
+
+        User.findOne({ name: 'celiloz' })
+            .then(user => {
+                if (!user) {
+
+                    user = new User({
+                        name: 'celiloz',
+                        email: 'email@gmail.com',
+                        cart: {
+                            items: []
+                        }
+                    });
+                    return user.save();
+                }
+                return user;
+            })
+            .then(user => {
+                console.log(user);
+                app.listen(3000);
+            })
+            .catch(err => { console.log(err) });
     })
-    .catch(err=>console.log(err));
+    .catch(err => {
+        console.log(err);
+    })
