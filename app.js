@@ -3,22 +3,40 @@ const app = express();
 
 const bodyParser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const mongoDbStore = require('connect-mongodb-session')(session);
 
 app.set('view engine', 'pug');
 app.set('views', './views');
 
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/shop');
-
-const mongoose = require('mongoose');
+const accountRoutes = require('./routes/account');
 
 const errorController = require('./controllers/errors');
 
 const User = require('./models/user');
+const ConnectionString = 'mongodb+srv://celiloz:Celil147369@cluster0.wtfup.mongodb.net/node-app?retryWrites=true&w=majority';
+
+var store = new mongoDbStore({
+    uri: ConnectionString,
+    collection: 'mySessions'
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 3600000
+    },
+    store: store
+}));
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.use((req, res, next) => {
     User.findOne({ name: 'celiloz' })
@@ -31,33 +49,14 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
+app.use(accountRoutes);
 
 app.use(errorController.get404Page);
 
-mongoose.connect('mongodb+srv://celiloz:Celil147369@cluster0.wtfup.mongodb.net/node-app?retryWrites=true&w=majority',{ useUnifiedTopology: true })
-        .then(() => {
+mongoose.connect(ConnectionString)
+    .then(() => {
         console.log('connected to mongodb');
-
-        User.findOne({ name: 'celiloz' })
-            .then(user => {
-                if (!user) {
-
-                    user = new User({
-                        name: 'celiloz',
-                        email: 'email@gmail.com',
-                        cart: {
-                            items: []
-                        }
-                    });
-                    return user.save();
-                }
-                return user;
-            })
-            .then(user => {
-                console.log(user);
-                app.listen(3000);
-            })
-            .catch(err => { console.log(err) });
+        app.listen(3000);
     })
     .catch(err => {
         console.log(err);

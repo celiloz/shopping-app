@@ -14,7 +14,8 @@ exports.getIndex = (req, res, next) => {
                         title: 'Shopping',
                         products: products,
                         path: '/',
-                        categories: categories
+                        categories: categories,
+                        isAuthenticated : req.cookies.isAuthenticated
                     });
                 })
         })
