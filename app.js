@@ -18,7 +18,7 @@ const accountRoutes = require('./routes/account');
 const errorController = require('./controllers/errors');
 
 const User = require('./models/user');
-const ConnectionString = 'mongodb+srv://celiloz:@cluster0.wtfup.mongodb.net/node-app?retryWrites=true&w=majority';
+const ConnectionString = ;
 
 var store = new mongoDbStore({
     uri: ConnectionString,
